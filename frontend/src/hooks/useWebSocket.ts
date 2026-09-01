@@ -11,14 +11,9 @@ export const useWebSocket = () => {
   useEffect(() => {
     if (vendorId && token) {
       webSocketService.connect(vendorId);
-    } else {
+    } else if (!vendorId || !token) {
       webSocketService.disconnect();
     }
-
-    return () => {
-      // Disconnect if hook unmounts or user logs out
-      webSocketService.disconnect();
-    };
   }, [vendorId, token]);
 
   return { wsConnected };

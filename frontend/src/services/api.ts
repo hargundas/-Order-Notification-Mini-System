@@ -3,7 +3,15 @@ import { useAuthStore } from '../stores/authStore';
 import { logger } from '../utils/logger';
 
 export const getApiBaseUrl = (): string => {
-  return localStorage.getItem('API_BASE_URL') || import.meta.env.VITE_API_URL || 'http://localhost:8080';
+  const saved = localStorage.getItem('API_BASE_URL');
+  if (saved) {
+    // If on HTTPS and saved is an insecure localhost, prefer the prod URL
+    if (typeof window !== 'undefined' && window.location.protocol === 'https:' && saved.startsWith('http://localhost') && import.meta.env.VITE_API_URL) {
+      return import.meta.env.VITE_API_URL;
+    }
+    return saved;
+  }
+  return import.meta.env.VITE_API_URL || 'http://localhost:8080';
 };
 
 export const setApiBaseUrl = (url: string): void => {
