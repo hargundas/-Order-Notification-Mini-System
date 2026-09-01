@@ -1,0 +1,24 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: order-notification-backend
+  main:
+    allow-bean-definition-overriding: true
+
+jwt:
+  secret: 404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970
+  expiry-minutes: ${JWT_EXPIRY_MINUTES:2}
+
+firebase:
+  credentials-path: ${FIREBASE_CREDENTIALS_PATH:classpath:firebase-service-account.json}
+  project-id: ${FIREBASE_PROJECT_ID:com-test-ordernotification}
+  enabled: ${FIREBASE_ENABLED:false}
+
+logging:
+  level:
+    root: INFO
+    com.test.ordernotification: DEBUG
+    org.springframework.web.socket: INFO
+    org.springframework.security: INFO

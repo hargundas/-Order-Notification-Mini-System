@@ -1,0 +1,38 @@
+{
+  "project_info": {
+    "project_number": "104958372615",
+    "project_id": "ordernotification-test",
+    "storage_bucket": "ordernotification-test.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:104958372615:android:7d29ab984a1e948123c5e7",
+        "android_client_info": {
+          "package_name": "com.test.ordernotification"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "104958372615-android.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.test.ordernotification",
+            "certificate_hash": "a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2"
+          }
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDummyApiKeyForTestNotificationProject12345"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

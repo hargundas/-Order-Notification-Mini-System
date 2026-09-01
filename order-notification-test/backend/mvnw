@@ -1,0 +1,28 @@
+#!/bin/sh
+# ----------------------------------------------------------------------------
+# Maven Start Up Shell Script
+# ----------------------------------------------------------------------------
+PRG="$0"
+while [ -h "$PRG" ]; do
+  ls=`ls -ld "$PRG"`
+  link=`expr "$ls" : '.*-> \(.*\)$'`
+  if expr "$link" : '/.*' > /dev/null; then
+    PRG="$link"
+  else
+    PRG=`dirname "$PRG"`/"$link"
+  fi
+done
+
+MAVEN_PROJECTBASEDIR=`dirname "$PRG"`
+EMBEDDED_MVN="$MAVEN_PROJECTBASEDIR/.mvn/apache-maven-3.9.6/bin/mvn"
+
+if [ -x "$EMBEDDED_MVN" ]; then
+    exec "$EMBEDDED_MVN" "$@"
+fi
+
+if [ -f "$EMBEDDED_MVN" ]; then
+    chmod +x "$EMBEDDED_MVN"
+    exec "$EMBEDDED_MVN" "$@"
+fi
+
+exec mvn "$@"
