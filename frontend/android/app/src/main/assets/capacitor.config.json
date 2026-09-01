@@ -1,0 +1,19 @@
+{
+	"appId": "com.test.ordernotification",
+	"appName": "OrderNotification",
+	"webDir": "dist",
+	"server": {
+		"cleartext": true,
+		"androidScheme": "http"
+	},
+	"plugins": {
+		"PushNotifications": {
+			"presentationOptions": [
+				"badge",
+				"sound",
+				"alert"
+			]
+		},
+		"App": {}
+	}
+}
