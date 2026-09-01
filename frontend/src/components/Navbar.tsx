@@ -8,10 +8,12 @@ import {
   Volume2, 
   VolumeX, 
   ShieldCheck, 
-  Store 
+  Store,
+  Settings
 } from 'lucide-react';
 import { useAuthStore } from '../stores/authStore';
 import { ConnectionBadge } from './ConnectionBadge';
+import { ServerSettingsModal } from './ServerSettingsModal';
 import { playOrderNotificationSound } from '../utils/sound';
 
 interface NavbarProps {
@@ -26,6 +28,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenSimulator, onOpenLogs }) =
 
   const [isRefreshingToken, setIsRefreshingToken] = useState(false);
   const [soundEnabled, setSoundEnabled] = useState(true);
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
   const handleManualTokenRefresh = async () => {
     try {
@@ -74,6 +77,15 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenSimulator, onOpenLogs }) =
 
         {/* Right Actions */}
         <div className="flex items-center gap-2">
+          {/* Server Connection Settings */}
+          <button
+            onClick={() => setIsSettingsOpen(true)}
+            className="btn btn-ghost text-xs p-2 text-slate-400 hover:text-white border border-slate-800"
+            title="Backend Server Connection Settings"
+          >
+            <Settings className="w-4 h-4 text-blue-400" />
+          </button>
+
           {/* Quick Sound Test */}
           <button
             onClick={handleTestChime}
@@ -128,6 +140,11 @@ export const Navbar: React.FC<NavbarProps> = ({ onOpenSimulator, onOpenLogs }) =
       <div className="md:hidden px-4 py-1 bg-slate-950/80 border-t border-slate-900 flex justify-center">
         <ConnectionBadge />
       </div>
+
+      <ServerSettingsModal
+        isOpen={isSettingsOpen}
+        onClose={() => setIsSettingsOpen(false)}
+      />
     </header>
   );
 };

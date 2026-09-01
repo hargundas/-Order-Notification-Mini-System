@@ -1,4 +1,3 @@
-# Java / Maven
 target/
 *.class
 *.jar
@@ -6,6 +5,9 @@ target/
 *.ear
 *.log
 .mvn/apache-maven*
+gradle-bin/
+gradle.zip
+
 
 # Node / React
 node_modules/

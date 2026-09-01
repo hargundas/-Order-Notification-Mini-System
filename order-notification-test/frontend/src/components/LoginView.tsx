@@ -7,15 +7,19 @@ import {
   Loader2, 
   Layers, 
   Zap, 
-  Activity 
+  Activity,
+  Settings 
 } from 'lucide-react';
 import { useAuthStore } from '../stores/authStore';
+import { ServerSettingsModal } from './ServerSettingsModal';
+import { getApiBaseUrl } from '../services/api';
 
 export const LoginView: React.FC = () => {
-  const [email, setEmail] = useState<string>('vendor@test.com');
-  const [password, setPassword] = useState<string>('test123');
+  const [email, setEmail] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [isSettingsOpen, setIsSettingsOpen] = useState<boolean>(false);
 
   const login = useAuthStore((state) => state.login);
 
@@ -33,16 +37,6 @@ export const LoginView: React.FC = () => {
     } finally {
       setIsLoading(false);
     }
-  };
-
-  const fillVendor1 = () => {
-    setEmail('vendor@test.com');
-    setPassword('test123');
-  };
-
-  const fillVendor2 = () => {
-    setEmail('vendor2@test.com');
-    setPassword('test123');
   };
 
   return (
@@ -87,7 +81,7 @@ export const LoginView: React.FC = () => {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className="w-full pl-10 pr-3.5 py-2.5 bg-slate-900/80 border border-slate-700/70 rounded-xl text-slate-100 text-xs focus:outline-none focus:border-blue-500 transition-colors"
-                  placeholder="vendor@test.com"
+                  placeholder="name@example.com"
                   required
                 />
               </div>
@@ -134,29 +128,17 @@ export const LoginView: React.FC = () => {
             </button>
           </form>
 
-          {/* Quick Demo Credentials */}
-          <div className="pt-2 border-t border-slate-800/80">
-            <span className="text-[11px] font-semibold text-slate-400 block mb-2">
-              Demo Credentials (Click to fill):
-            </span>
-            <div className="grid grid-cols-2 gap-2">
-              <button
-                type="button"
-                onClick={fillVendor1}
-                className="p-2 rounded-xl bg-slate-900/90 hover:bg-slate-800 border border-slate-800 text-left transition-all text-[11px] text-slate-300 group"
-              >
-                <div className="font-semibold group-hover:text-blue-400">vendor@test.com</div>
-                <div className="text-[10px] text-slate-500">ID: vendor-123</div>
-              </button>
-              <button
-                type="button"
-                onClick={fillVendor2}
-                className="p-2 rounded-xl bg-slate-900/90 hover:bg-slate-800 border border-slate-800 text-left transition-all text-[11px] text-slate-300 group"
-              >
-                <div className="font-semibold group-hover:text-purple-400">vendor2@test.com</div>
-                <div className="text-[10px] text-slate-500">ID: vendor-456</div>
-              </button>
-            </div>
+          {/* Server Config Trigger */}
+          <div className="pt-2 border-t border-slate-800/80 flex items-center justify-between text-[11px] text-slate-500">
+            <span className="truncate max-w-[220px]">Server: <code className="text-slate-400 font-mono">{getApiBaseUrl()}</code></span>
+            <button
+              type="button"
+              onClick={() => setIsSettingsOpen(true)}
+              className="flex items-center gap-1 text-blue-400 hover:text-blue-300 transition-colors"
+            >
+              <Settings className="w-3.5 h-3.5" />
+              <span>Change Server</span>
+            </button>
           </div>
         </div>
 
@@ -176,6 +158,11 @@ export const LoginView: React.FC = () => {
           </div>
         </div>
       </div>
+
+      <ServerSettingsModal
+        isOpen={isSettingsOpen}
+        onClose={() => setIsSettingsOpen(false)}
+      />
     </div>
   );
 };

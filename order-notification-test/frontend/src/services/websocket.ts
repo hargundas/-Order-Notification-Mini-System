@@ -5,7 +5,7 @@ import { useOrderStore, Order } from '../stores/orderStore';
 import { logger } from '../utils/logger';
 import { playOrderNotificationSound } from '../utils/sound';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080';
+import { getApiBaseUrl } from './api';
 
 class WebSocketService {
   private client: Client | null = null;
@@ -20,11 +20,12 @@ class WebSocketService {
     this.disconnect();
     this.currentVendorId = vendorId;
 
-    logger.info('WS_CONNECTING', `Initiating STOMP WebSocket connection for vendor ${vendorId}`);
+    const apiBase = getApiBaseUrl();
+    logger.info('WS_CONNECTING', `Initiating STOMP WebSocket connection to ${apiBase}/ws for vendor ${vendorId}`);
 
     this.client = new Client({
       // Provide SockJS fallback factory
-      webSocketFactory: () => new SockJS(`${API_BASE_URL}/ws`),
+      webSocketFactory: () => new SockJS(`${apiBase}/ws`),
 
       // Challenge 2 Scenario B: Automatic reconnection backoff of 3000ms
       reconnectDelay: 3000,

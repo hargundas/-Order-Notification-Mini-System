@@ -7,15 +7,19 @@ import {
   Loader2, 
   Layers, 
   Zap, 
-  Activity 
+  Activity,
+  Settings 
 } from 'lucide-react';
 import { useAuthStore } from '../stores/authStore';
+import { ServerSettingsModal } from './ServerSettingsModal';
+import { getApiBaseUrl } from '../services/api';
 
 export const LoginView: React.FC = () => {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [isSettingsOpen, setIsSettingsOpen] = useState<boolean>(false);
 
   const login = useAuthStore((state) => state.login);
 
@@ -123,6 +127,19 @@ export const LoginView: React.FC = () => {
               )}
             </button>
           </form>
+
+          {/* Server Config Trigger */}
+          <div className="pt-2 border-t border-slate-800/80 flex items-center justify-between text-[11px] text-slate-500">
+            <span className="truncate max-w-[220px]">Server: <code className="text-slate-400 font-mono">{getApiBaseUrl()}</code></span>
+            <button
+              type="button"
+              onClick={() => setIsSettingsOpen(true)}
+              className="flex items-center gap-1 text-blue-400 hover:text-blue-300 transition-colors"
+            >
+              <Settings className="w-3.5 h-3.5" />
+              <span>Change Server</span>
+            </button>
+          </div>
         </div>
 
         {/* Architectural Highlights Pill */}
@@ -141,6 +158,11 @@ export const LoginView: React.FC = () => {
           </div>
         </div>
       </div>
+
+      <ServerSettingsModal
+        isOpen={isSettingsOpen}
+        onClose={() => setIsSettingsOpen(false)}
+      />
     </div>
   );
 };

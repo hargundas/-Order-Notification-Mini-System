@@ -2,10 +2,16 @@ import axios, { AxiosError, InternalAxiosRequestConfig } from 'axios';
 import { useAuthStore } from '../stores/authStore';
 import { logger } from '../utils/logger';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080';
+export const getApiBaseUrl = (): string => {
+  return localStorage.getItem('API_BASE_URL') || import.meta.env.VITE_API_URL || 'http://localhost:8080';
+};
+
+export const setApiBaseUrl = (url: string): void => {
+  localStorage.setItem('API_BASE_URL', url.replace(/\/+$/, ''));
+};
 
 export const apiClient = axios.create({
-  baseURL: API_BASE_URL,
+  baseURL: getApiBaseUrl(),
   headers: {
     'Content-Type': 'application/json',
   },
@@ -30,9 +36,10 @@ const processQueue = (error: any, token: string | null = null) => {
   failedQueue = [];
 };
 
-// Request Interceptor: Injects active Bearer token
+// Request Interceptor: Injects active Bearer token and current API URL
 apiClient.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
+    config.baseURL = getApiBaseUrl();
     const token = useAuthStore.getState().token || localStorage.getItem('auth_token');
     if (token && config.headers) {
       config.headers.Authorization = `Bearer ${token}`;
