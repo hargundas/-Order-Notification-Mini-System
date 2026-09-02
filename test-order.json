@@ -1,0 +1,11 @@
+{
+  "vendorId": "vendor-123",
+  "customerName": "Test Customer",
+  "items": [
+    {
+      "name": "Crispy Burger",
+      "price": 10.5,
+      "quantity": 2
+    }
+  ]
+}
