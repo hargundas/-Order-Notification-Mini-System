@@ -11,6 +11,7 @@ import {
   Loader2 
 } from 'lucide-react';
 import { useAuthStore } from '../stores/authStore';
+import { getApiBaseUrl } from '../utils/serverUrl';
 
 interface OrderSimulatorDrawerProps {
   isOpen: boolean;
@@ -130,7 +131,9 @@ export const OrderSimulatorDrawer: React.FC<OrderSimulatorDrawerProps> = ({
         onClose();
       }, 1200);
     } catch (err: any) {
-      alert('Error creating order: ' + (err.response?.data?.message || err.message));
+      const serverUrl = getApiBaseUrl();
+      const errMsg = err.response?.data?.message || err.message;
+      alert(`Error creating order: ${errMsg}\nTarget Server: ${serverUrl}\n\nIf you see a Network Error, click 'Server Settings' (gear icon) in the header to check or update your backend URL.`);
     } finally {
       setIsSubmitting(false);
     }

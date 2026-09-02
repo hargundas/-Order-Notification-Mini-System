@@ -16,11 +16,11 @@ export const getApiBaseUrl = (): string => {
 
   if (saved) {
     // Browsers block HTTP API and WebSocket traffic from an HTTPS page. If the
-    // stale saved value is localhost, prefer the HTTPS deployment URL.
+    // stale saved value is localhost or HTTP on HTTPS host, prefer the HTTPS deployment URL.
     if (
       typeof window !== 'undefined' &&
       window.location.protocol === 'https:' &&
-      saved.startsWith('http://localhost') &&
+      saved.startsWith('http://') &&
       import.meta.env.VITE_API_URL
     ) {
       return normalizeUrl(import.meta.env.VITE_API_URL);
