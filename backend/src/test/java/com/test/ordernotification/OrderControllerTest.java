@@ -139,4 +139,21 @@ class OrderControllerTest {
         mockMvc.perform(get("/vendor/orders"))
                 .andExpect(status().isUnauthorized());
     }
+
+    @Test
+    @DisplayName("CORS preflight permits the tunnel bypass request header")
+    void testCorsAllowsTunnelBypassHeader() throws Exception {
+        mockMvc.perform(options("/vendor/orders")
+                        .header("Origin", "http://localhost:5173")
+                        .header("Access-Control-Request-Method", "GET")
+                        .header(
+                                "Access-Control-Request-Headers",
+                                "Authorization,Bypass-Tunnel-Reminder"
+                        ))
+                .andExpect(status().isOk())
+                .andExpect(header().string(
+                        "Access-Control-Allow-Headers",
+                        containsString("Bypass-Tunnel-Reminder")
+                ));
+    }
 }

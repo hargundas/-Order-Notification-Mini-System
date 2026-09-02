@@ -4,9 +4,6 @@ server:
 spring:
   application:
     name: order-notification-backend
-  main:
-    allow-bean-definition-overriding: true
-
 jwt:
   secret: 404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970
   expiry-minutes: ${JWT_EXPIRY_MINUTES:2}

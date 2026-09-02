@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Server, Check, RotateCcw, X, Globe, ShieldAlert } from 'lucide-react';
-import { getApiBaseUrl, setApiBaseUrl } from '../services/api';
+import { getApiBaseUrl, resetApiBaseUrl, setApiBaseUrl } from '../services/api';
 import { webSocketService } from '../services/websocket';
 import { useAuthStore } from '../stores/authStore';
 
@@ -13,6 +13,7 @@ export const ServerSettingsModal: React.FC<ServerSettingsModalProps> = ({ isOpen
   const [url, setUrl] = useState<string>(getApiBaseUrl());
   const [isSaved, setIsSaved] = useState<boolean>(false);
   const vendorId = useAuthStore((state) => state.vendorId);
+  const token = useAuthStore((state) => state.token);
 
   if (!isOpen) return null;
 
@@ -23,8 +24,8 @@ export const ServerSettingsModal: React.FC<ServerSettingsModalProps> = ({ isOpen
     setIsSaved(true);
 
     // Reconnect websocket if logged in
-    if (vendorId) {
-      webSocketService.connect(vendorId);
+    if (vendorId && token) {
+      webSocketService.connect(vendorId, token, true);
     }
 
     setTimeout(() => {
@@ -34,11 +35,10 @@ export const ServerSettingsModal: React.FC<ServerSettingsModalProps> = ({ isOpen
   };
 
   const handleReset = () => {
-    const defaultUrl = 'http://localhost:8080';
+    const defaultUrl = resetApiBaseUrl();
     setUrl(defaultUrl);
-    setApiBaseUrl(defaultUrl);
-    if (vendorId) {
-      webSocketService.connect(vendorId);
+    if (vendorId && token) {
+      webSocketService.connect(vendorId, token, true);
     }
   };
 

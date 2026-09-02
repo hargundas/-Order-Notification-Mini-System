@@ -3,6 +3,8 @@ import { App } from '@capacitor/app';
 import { PushNotifications } from '@capacitor/push-notifications';
 import { Capacitor } from '@capacitor/core';
 import { useConnectionStore } from '../stores/connectionStore';
+import { useAuthStore } from '../stores/authStore';
+import { webSocketService } from '../services/websocket';
 import { logger } from '../utils/logger';
 
 export const useNetworkStatus = () => {
@@ -14,6 +16,10 @@ export const useNetworkStatus = () => {
     const handleOnline = () => {
       logger.info('NETWORK_ONLINE', 'Device connection restored');
       setIsOnline(true);
+      const { vendorId, token } = useAuthStore.getState();
+      if (vendorId && token) {
+        webSocketService.connect(vendorId, token, true);
+      }
     };
 
     const handleOffline = () => {
@@ -26,6 +32,7 @@ export const useNetworkStatus = () => {
 
     // Challenge 2 Scenario D: Capacitor App State (Background / Foreground)
     let appStateListener: any = null;
+    const pushListeners: any[] = [];
     const setupAppState = async () => {
       try {
         appStateListener = await App.addListener('appStateChange', (state) => {
@@ -33,6 +40,12 @@ export const useNetworkStatus = () => {
             'APP_STATE_CHANGE',
             `Capacitor app state changed: isActive=${state.isActive}`
           );
+          if (state.isActive) {
+            const { vendorId, token } = useAuthStore.getState();
+            if (vendorId && token) {
+              webSocketService.connect(vendorId, token, true);
+            }
+          }
         });
       } catch (e) {
         // Not running in Capacitor native runtime, ignore
@@ -43,6 +56,29 @@ export const useNetworkStatus = () => {
     const setupPush = async () => {
       if (Capacitor.isNativePlatform()) {
         try {
+          pushListeners.push(
+            await PushNotifications.addListener('registration', (registration) => {
+              logger.info('FCM_TOKEN_RECEIVED', 'Native push token received', {
+                token: `${registration.value.slice(0, 8)}...[REDACTED]`,
+              });
+            }),
+            await PushNotifications.addListener('registrationError', (error) => {
+              logger.error('FCM_REGISTRATION_ERROR', 'Native push registration failed', error);
+            }),
+            await PushNotifications.addListener('pushNotificationReceived', (notification) => {
+              logger.info('FCM_NOTIFICATION_RECEIVED', 'Push notification received', {
+                id: notification.id,
+                title: notification.title,
+              });
+            }),
+            await PushNotifications.addListener('pushNotificationActionPerformed', (action) => {
+              logger.info('FCM_NOTIFICATION_TAPPED', 'Push notification opened', {
+                actionId: action.actionId,
+                notificationId: action.notification.id,
+              });
+            })
+          );
+
           const permStatus = await PushNotifications.requestPermissions();
           if (permStatus.receive === 'granted') {
             await PushNotifications.register();
@@ -63,6 +99,7 @@ export const useNetworkStatus = () => {
       if (appStateListener && appStateListener.remove) {
         appStateListener.remove();
       }
+      pushListeners.forEach((listener) => listener.remove?.());
     };
   }, [setIsOnline]);
 

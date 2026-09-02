@@ -1,22 +1,9 @@
 import axios, { AxiosError, InternalAxiosRequestConfig } from 'axios';
 import { useAuthStore } from '../stores/authStore';
 import { logger } from '../utils/logger';
+import { getApiBaseUrl } from '../utils/serverUrl';
 
-export const getApiBaseUrl = (): string => {
-  const saved = localStorage.getItem('API_BASE_URL');
-  if (saved) {
-    // If on HTTPS and saved is an insecure localhost, prefer the prod URL
-    if (typeof window !== 'undefined' && window.location.protocol === 'https:' && saved.startsWith('http://localhost') && import.meta.env.VITE_API_URL) {
-      return import.meta.env.VITE_API_URL;
-    }
-    return saved;
-  }
-  return import.meta.env.VITE_API_URL || 'http://localhost:8080';
-};
-
-export const setApiBaseUrl = (url: string): void => {
-  localStorage.setItem('API_BASE_URL', url.replace(/\/+$/, ''));
-};
+export { getApiBaseUrl, resetApiBaseUrl, setApiBaseUrl } from '../utils/serverUrl';
 
 export const apiClient = axios.create({
   baseURL: getApiBaseUrl(),
@@ -113,7 +100,6 @@ apiClient.interceptors.response.use(
     } catch (refreshError: any) {
       logger.error('AXIOS_REPLAY_FAILED', 'Silent refresh failed, rejecting queued requests');
       processQueue(refreshError, null);
-      useAuthStore.getState().logout();
       return Promise.reject(refreshError);
     } finally {
       isRefreshing = false;

@@ -2,7 +2,7 @@
 
 A high-performance, event-driven full-stack system designed for instant vendor order alerts, preparation time adjustments, and fault-tolerant communication between micro-services and mobile/web clients.
 
-Built with **Spring Boot 3.2 (Java 21)**, **React 18 (TypeScript + Vite + Zustand)**, and **Capacitor Android (Manifest V3 + FCM)** using strict Onion Architecture principles.
+Built with **Spring Boot 3.2 (Java 21)**, **React 18 (TypeScript + Vite + Zustand)**, and a **Capacitor 6 Android scaffold** using Onion Architecture principles.
 
 ---
 
@@ -31,7 +31,7 @@ Built with **Spring Boot 3.2 (Java 21)**, **React 18 (TypeScript + Vite + Zustan
 ### 4. Cross-Platform Mobile Support (Capacitor Android)
 - Configured with package ID `com.test.ordernotification` and `usesCleartextTraffic="true"` for local backend communication.
 - Background/foreground app state transitions monitored via `@capacitor/app`.
-- Firebase Cloud Messaging (FCM) push notification integration for native mobile alerts.
+- Firebase Cloud Messaging (FCM) lifecycle hooks are present, but real delivery still requires valid Firebase credentials, device-token routing, and a complete Android project.
 
 ---
 
@@ -78,7 +78,7 @@ Built with **Spring Boot 3.2 (Java 21)**, **React 18 (TypeScript + Vite + Zustan
 │   │   ├── api/                            # DTOs and API Facades
 │   │   ├── domain/                         # Core Models (Records), Services, Events
 │   │   └── infrastructure/                 # Controllers, Persistence, Security, WS
-│   ├── src/test/java/                      # JUnit 5 & MockMvc Test Suite (13 tests)
+│   ├── src/test/java/                      # JUnit 5 & MockMvc Test Suite (17 tests)
 │   ├── src/main/resources/application.yml  # Application properties
 │   └── pom.xml                             # Maven configuration
 │
@@ -148,6 +148,8 @@ Open `http://localhost:5173` in your browser.
 
 ### 3. Build for Capacitor Android
 
+> Current repository status: the checked-in Android scaffold is incomplete (`gradlew`, `settings.gradle`, and standard resources are missing), so it is not yet submission-ready. Regenerate the native project before running the commands below, then replace the placeholder Firebase configuration with real project credentials.
+
 ```bash
 cd frontend
 
@@ -175,7 +177,7 @@ npx cap open android
 | `PUT` | `/vendor/orders/{id}/accept?delayMinutes=15` | Bearer | Accepts order with specified preparation delay |
 | `PUT` | `/vendor/orders/{id}/reject` | Bearer | Rejects order |
 | `POST` | `/client-logs` | None | Receives client telemetry & logs to server console |
-| `WS` | `/ws` | None | STOMP WebSocket broker endpoint (`/topic/vendor/{vendorId}/orders`) |
+| `WS` | `/ws` | Bearer in STOMP `CONNECT` | Authenticated STOMP WebSocket endpoint (`/topic/vendor/{vendorId}/orders`) |
 
 ---
 
@@ -187,3 +189,11 @@ The test suite covers full domain integrity, controllers, security filters, and 
 - **`OrderServiceTest`**: Verifies domain event publishing on order creation, acceptance with delay, and rejection.
 - **`AuthControllerTest`**: Validates login authentication, invalid credential handling, and JWT refresh lifecycle.
 - **`OrderControllerTest`**: End-to-end MockMvc testing of order creation, vendor order security, and state mutations.
+- **`WebSocketJwtChannelInterceptorTest`**: Verifies STOMP authentication and vendor-scoped topic authorization.
+
+### WebSocket troubleshooting
+
+- For local web development, use `http://localhost:8080`.
+- For an HTTPS-hosted frontend or a physical Android device, use a reachable HTTPS backend URL. Cloudflare Quick Tunnels support the SockJS negotiation used by this project.
+- Avoid public LocalTunnel URLs for SockJS. Its browser reminder can intercept `/ws/info`, and browser SockJS negotiation cannot reliably attach LocalTunnel's bypass header.
+- Changing the URL in **Server Settings** now tears down the old retry loop and connects immediately to the new server without a page reload.

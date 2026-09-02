@@ -10,7 +10,7 @@ export const useWebSocket = () => {
 
   useEffect(() => {
     if (vendorId && token) {
-      webSocketService.connect(vendorId);
+      webSocketService.connect(vendorId, token);
     } else if (!vendorId || !token) {
       webSocketService.disconnect();
     }

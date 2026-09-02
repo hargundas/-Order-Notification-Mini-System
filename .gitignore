@@ -37,3 +37,7 @@ android/app/build/
 android/build/
 .gradle/
 local.properties
+
+gradle-dist/
+
+META-INF/

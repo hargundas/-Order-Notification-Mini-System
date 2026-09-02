@@ -1,6 +1,5 @@
 import axios from 'axios';
-
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080';
+import { getApiBaseUrl } from './serverUrl';
 
 export interface LogEntry {
   id: string;
@@ -31,7 +30,7 @@ const emitLog = (entry: LogEntry) => {
 const sendRemoteLog = async (entry: LogEntry) => {
   try {
     await axios.post(
-      `${API_BASE_URL}/client-logs`,
+      `${getApiBaseUrl()}/client-logs`,
       {
         event: entry.event,
         level: entry.level,
@@ -39,7 +38,10 @@ const sendRemoteLog = async (entry: LogEntry) => {
         details: entry.details,
         timestamp: entry.timestamp,
       },
-      { timeout: 3000 }
+      {
+        timeout: 3000,
+        headers: { 'Bypass-Tunnel-Reminder': 'true' },
+      }
     );
   } catch (err) {
     // Fail silently to avoid infinite error loops
