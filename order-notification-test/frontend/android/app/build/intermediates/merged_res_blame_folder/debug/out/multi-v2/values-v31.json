@@ -1,0 +1,20 @@
+{
+    "logs": [
+        {
+            "outputFile": "com.test.ordernotification.app-mergeDebugResources-29:/values-v31/values-v31.xml",
+            "map": [
+                {
+                    "source": "C:\\Users\\IQRA   TRADERS\\.gradle\\caches\\transforms-3\\7e563c84d7d0ba640086b46f4a04265c\\transformed\\jetified-core-splashscreen-1.0.1\\res\\values-v31\\values-v31.xml",
+                    "from": {
+                        "startLines": "2,9",
+                        "startColumns": "4,4",
+                        "startOffsets": "55,473",
+                        "endLines": "8,13",
+                        "endColumns": "12,12",
+                        "endOffsets": "468,697"
+                    }
+                }
+            ]
+        }
+    ]
+}

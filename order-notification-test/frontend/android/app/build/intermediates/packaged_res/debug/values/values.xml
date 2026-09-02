@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorAccent">#06B6D4</color>
+    <color name="colorPrimary">#6366F1</color>
+    <color name="colorPrimaryDark">#4F46E5</color>
+    <string name="app_name">Order Notification</string>
+    <string name="custom_url_scheme">com.test.ordernotification</string>
+    <string name="gcm_defaultSenderId" translatable="false">104958372615</string>
+    <string name="google_api_key" translatable="false">AIzaSyDummyApiKeyForTestNotificationProject12345</string>
+    <string name="google_app_id" translatable="false">1:104958372615:android:7d29ab984a1e948123c5e7</string>
+    <string name="google_crash_reporting_api_key" translatable="false">AIzaSyDummyApiKeyForTestNotificationProject12345</string>
+    <string name="google_storage_bucket" translatable="false">ordernotification-test.appspot.com</string>
+    <string name="package_name">com.test.ordernotification</string>
+    <string name="project_id" translatable="false">ordernotification-test</string>
+    <string name="title_activity_main">Order Notification</string>
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+    <style name="AppTheme.NoActionBar" parent="Theme.AppCompat.DayNight.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:background">@null</item>
+    </style>
+    <style name="AppTheme.NoActionBarLaunch" parent="AppTheme.NoActionBar">
+        <item name="android:background">@null</item>
+    </style>
+</resources>

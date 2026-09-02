@@ -1,0 +1,10 @@
+[
+    {
+        "merged": "com.test.ordernotification.app-merged_res-31:/xml_file_paths.xml.flat",
+        "source": "com.test.ordernotification.app-main-33:/xml/file_paths.xml"
+    },
+    {
+        "merged": "C:\\Users\\IQRA   TRADERS\\.gradle\\daemon\\8.2.1\\com.test.ordernotification.app-merged_res-31:\\xml_config.xml.flat",
+        "source": "C:\\Users\\IQRA   TRADERS\\.gradle\\daemon\\8.2.1\\com.test.ordernotification.app-main-33:\\xml\\config.xml"
+    }
+]
