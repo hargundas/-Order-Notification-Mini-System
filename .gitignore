@@ -8,6 +8,7 @@ target/
 gradle-bin/
 gradle.zip
 cloudflared.exe
+cftunnel.exe
 
 
 # Node / React
